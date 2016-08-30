@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable class SVSlider: UIControl {
-    //MARK: - Private Variables
+    // MARK: - Private Variables
     private var slider: UIView = UIView()
     private var sliderWidthConstraint: NSLayoutConstraint!
     private var sliderPositionConstraint: NSLayoutConstraint!
@@ -21,14 +21,14 @@ import UIKit
     private var imageView: UIImageView = UIImageView()
     private var shouldSlide: Bool = false
 
-    //MARK: - Public Variables
+    // MARK: - Public Variables
     private(set) var progress: Float = 0.0 {
         didSet {
             slideOutView.alpha = CGFloat(progress)
         }
     }
 
-    //MARK: - IBInspectable Variables
+    // MARK: - IBInspectable Variables
     @IBInspectable var sliderColor: UIColor = UIColor.lightGrayColor() {
         didSet {
             slider.backgroundColor = sliderColor
@@ -159,7 +159,7 @@ import UIKit
         }
     }
 
-    //MARK: - Initializers
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -171,20 +171,20 @@ import UIKit
         setup()
     }
 
-    //MARK: - Private Methods
+    // MARK: - Private Methods
     private func addVisualConstraints(vertical: String, horizontal: String, view: UIView, toView: UIView) {
-        let veritcalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(vertical, options: [], metrics: nil, views: ["view":view])
-        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(horizontal, options: [], metrics: nil, views: ["view":view])
+        let veritcalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(vertical, options: [], metrics: nil, views: ["view": view])
+        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(horizontal, options: [], metrics: nil, views: ["view": view])
         addConstraints(veritcalConstraints)
         addConstraints(horizontalConstraints)
     }
 
     private func setup() {
-        //Apply the custom slider styling
+        // Apply the custom slider styling
         layer.cornerRadius = cornerRadius
         layer.masksToBounds = true
 
-        //Add slideIn label
+        // Add slideIn label
         slideInLabel.translatesAutoresizingMaskIntoConstraints = false
         slideInLabel.textAlignment = .Center
         slideInLabel.textColor = slideInTextColor
@@ -192,7 +192,7 @@ import UIKit
         addSubview(slideInLabel)
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: slideInLabel, toView: self)
 
-        //Add slideOut view
+        // Add slideOut view
         slideOutView.translatesAutoresizingMaskIntoConstraints = false
         slideOutView.backgroundColor = slideOutColor
         slideOutView.alpha = 0
@@ -200,7 +200,7 @@ import UIKit
         addSubview(slideOutView)
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: slideOutView, toView: self)
 
-        //Add slideOut label to slideOutView
+        // Add slideOut label to slideOutView
         slideOutLabel.translatesAutoresizingMaskIntoConstraints = false
         slideOutLabel.textAlignment = .Center
         slideOutLabel.textColor = slideOutTextColor
@@ -208,7 +208,7 @@ import UIKit
         slideOutView.addSubview(slideOutLabel)
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: slideOutLabel, toView: slideOutView)
 
-        //Create Slider
+        // Create Slider
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.backgroundColor = sliderColor
         slider.layer.cornerRadius = cornerRadius
@@ -227,19 +227,19 @@ import UIKit
         addConstraint(sliderPositionConstraint)
         slider.addConstraint(sliderWidthConstraint)
 
-        //ImageView for optional slider image
+        // ImageView for optional slider image
         imageView.translatesAutoresizingMaskIntoConstraints = false
         slider.addSubview(imageView)
         imageView.contentMode = sliderImageContentMode
         imageView.image = sliderImage
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: imageView, toView: slider)
 
-        //Add pan gesture to slide the slider view
+        // Add pan gesture to slide the slider view
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
         addGestureRecognizer(pan)
     }
 
-    //MARK: - Public Methods
+    // MARK: - Public Methods
     func reset() {
         progress = 0
         sliderWidthConstraint.constant = sliderWidth
@@ -253,7 +253,7 @@ import UIKit
         let lastPosition = bounds.size.width - sliderWidth - sliderPadding
         let startPosition = sliderPadding
 
-        switch (recognizer.state) {
+        switch recognizer.state {
         case .Began:
             sendActionsForControlEvents(.EditingDidBegin)
             shouldSlide = x >= sliderPositionConstraint.constant - sliderPadding
@@ -272,7 +272,7 @@ import UIKit
             let success: Bool
             let finalX: CGFloat
 
-            //If we are more than 50% through the swipe and moving the the right direction
+            // If we are more than 50% through the swipe and moving the the right direction
             if progress > 0.5 && recognizer.velocityInView(self).x > -1 {
                 success = true
                 finalX = lastPosition
@@ -307,4 +307,5 @@ import UIKit
         }
 
     }
+
 }
