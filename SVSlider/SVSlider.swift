@@ -173,9 +173,9 @@ import UIKit
 
     // MARK: - Private Methods
     private func addVisualConstraints(vertical: String, horizontal: String, view: UIView, toView: UIView) {
-        let veritcalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(vertical, options: [], metrics: nil, views: ["view": view])
+        let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(vertical, options: [], metrics: nil, views: ["view": view])
         let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat(horizontal, options: [], metrics: nil, views: ["view": view])
-        addConstraints(veritcalConstraints)
+        addConstraints(verticalConstraints)
         addConstraints(horizontalConstraints)
     }
 
