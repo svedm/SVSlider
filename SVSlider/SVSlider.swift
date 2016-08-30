@@ -179,11 +179,7 @@ import UIKit
         addConstraints(horizontalConstraints)
     }
 
-    private func setup() {
-        // Apply the custom slider styling
-        layer.cornerRadius = cornerRadius
-        layer.masksToBounds = true
-
+    private func addSlideInLabel() {
         // Add slideIn label
         slideInLabel.translatesAutoresizingMaskIntoConstraints = false
         slideInLabel.textAlignment = .Center
@@ -191,8 +187,9 @@ import UIKit
         slideInLabel.font = slideInFont
         addSubview(slideInLabel)
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: slideInLabel, toView: self)
+    }
 
-        // Add slideOut view
+    private func addSlideOutView() {
         slideOutView.translatesAutoresizingMaskIntoConstraints = false
         slideOutView.backgroundColor = slideOutColor
         slideOutView.alpha = 0
@@ -207,7 +204,9 @@ import UIKit
         slideOutLabel.font = slideOutFont
         slideOutView.addSubview(slideOutLabel)
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: slideOutLabel, toView: slideOutView)
+    }
 
+    private func addSlider() {
         // Create Slider
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.backgroundColor = sliderColor
@@ -233,6 +232,17 @@ import UIKit
         imageView.contentMode = sliderImageContentMode
         imageView.image = sliderImage
         addVisualConstraints("V:|[view]|", horizontal: "H:|[view]|", view: imageView, toView: slider)
+    }
+
+    private func setup() {
+        // Apply the custom slider styling
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = true
+
+        // Add views
+        addSlideInLabel()
+        addSlideOutView()
+        addSlider()
 
         // Add pan gesture to slide the slider view
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
@@ -246,6 +256,12 @@ import UIKit
         sliderPositionConstraint.constant = sliderPadding
         setNeedsUpdateConstraints()
         layoutIfNeeded()
+    }
+
+    private func changeSliderViewsState(success: Bool) {
+        imageView.image = success ? sliderBackImage : sliderImage
+        slideInLabel.hidden = success
+        slideOutLabel.hidden = !success
     }
 
     func panGesture(recognizer: UIPanGestureRecognizer) {
@@ -269,25 +285,14 @@ import UIKit
         case .Cancelled:
             guard shouldSlide else { return }
             progress = Float(x / bounds.size.width)
-            let success: Bool
-            let finalX: CGFloat
 
             // If we are more than 50% through the swipe and moving the the right direction
-            if progress > 0.5 && recognizer.velocityInView(self).x > -1 {
-                success = true
-                finalX = lastPosition
-                imageView.image = sliderBackImage
-                slideOutLabel.hidden = !success
-                progress = 1
-            } else {
-                success = false
-                finalX = startPosition
-                imageView.image = sliderImage
-                slideInLabel.hidden = success
-                slideOutLabel.hidden = !success
-                progress = 0
-            }
+            let success = progress > 0.5 && recognizer.velocityInView(self).x > -1
+            let finalX = success ? lastPosition : startPosition
+            progress = success ? 1 : 0
 
+
+            changeSliderViewsState(success)
             sliderPositionConstraint.constant = finalX
             setNeedsUpdateConstraints()
 
